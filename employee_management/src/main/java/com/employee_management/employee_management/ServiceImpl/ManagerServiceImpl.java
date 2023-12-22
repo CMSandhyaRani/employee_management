@@ -1,7 +1,8 @@
-package com.employee_management.employee_management.ServiceImpl;
+ package com.employee_management.employee_management.ServiceImpl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,6 +12,8 @@ import com.employee_management.employee_management.Entities.Manager;
 import com.employee_management.employee_management.Repositories.Employee_ManagementRepository;
 import com.employee_management.employee_management.Repositories.ManagerReposiory;
 import com.employee_management.employee_management.Service.ManagerService;
+
+import Exceptions.EmployeeException;
 
 @Service
 public class ManagerServiceImpl implements ManagerService {
@@ -58,15 +61,37 @@ public class ManagerServiceImpl implements ManagerService {
 		// TODO Auto-generated method stub
 		Manager manager = managerReposiory.findById(manid).get();
 		List<Employee> employees = new ArrayList<>();
+		//Employee e ;
 		for(Long i : empid)
 		{
-			employees.add(employeeRepository.findById(i).get());
+			
+			
+			try
+			{
+				employees.add(employeeRepository.findById(i).get());
+			//Employee e = null;)
+			}
+			catch(NoSuchElementException exe) {
+				return "Employee Id :" + i+" doesn't exist";
+			}
+			
+			
 			
 		}
 		System.out.println(employees);
-		//employees.add(employeeRepository.findById((long) 1).get());
+		
 		for(Employee i : employees)
 		{
+			/*try {
+				if(i.getFirst_name().equals(null))
+				{
+					System.out.println("Hello");
+					throw new EmployeeException("This Employee Id does't exist");
+				}
+			}
+			catch(EmployeeException e) {
+				return e.getMessage();
+			}*/
 		i.setManager(manager);
 		employeeRepository.save(i);
 		}
